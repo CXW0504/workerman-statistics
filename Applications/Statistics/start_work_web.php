@@ -14,14 +14,14 @@
 require_once __DIR__ . '/loader.php';
 
 use Bootstrap\StatisticProvider;
-use Bootstrap\StatisticWorker;
+use Bootstrap\StatisticWorkerWeb;
 use \Workerman\Worker;
 use \Workerman\WebServer;
 
 // StatisticWorker
-$statistic_worker = new StatisticWorker("Statistic://0.0.0.0:55656");
-$statistic_worker->transport = 'udp';
-$statistic_worker->name = 'StatisticWorker';
+$statistic_worker = new StatisticWorkerWeb("http://0.0.0.0:55959");
+$statistic_worker->transport = 'http';
+$statistic_worker->name = 'StatisticWorkerWeb';
 
 // 如果不是在根目录启动，则运行runAll方法
 if(!defined('GLOBAL_START'))
