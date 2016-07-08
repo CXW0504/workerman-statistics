@@ -42,27 +42,34 @@ class StatisticClient
      * @param int $code
      * @param string $msg
      * @param string $report_address
+     * @param int $cost_time
      * @return boolean
      */
-    public static function report($module, $interface, $success, $code, $msg, $report_address = '')
+    public static function report($module, $interface, $success, $code, $msg, $report_address = '', $cost_time=0)
     {
         $report_address = $report_address ? $report_address : 'udp://127.0.0.1:55656';
-        if(isset(self::$timeMap[$module][$interface]) && self::$timeMap[$module][$interface] > 0)
-        {
-            $time_start = self::$timeMap[$module][$interface];
-            self::$timeMap[$module][$interface] = 0;
+        if(empty($cost_time)){
+            if(isset(self::$timeMap[$module][$interface]) && self::$timeMap[$module][$interface] > 0)
+            {
+                $time_start = self::$timeMap[$module][$interface];
+                self::$timeMap[$module][$interface] = 0;
+            }
+            else if(isset(self::$timeMap['']['']) && self::$timeMap[''][''] > 0)
+            {
+                $time_start = self::$timeMap[''][''];
+                self::$timeMap[''][''] = 0;
+            }
+            else
+            {
+                $time_start = microtime(true);
+            }
+
+            $cost_time = microtime(true) - $time_start;
+        }else{
+            isset(self::$timeMap[$module][$interface]) and self::$timeMap[$module][$interface]=0;
+            isset(self::$timeMap['']['']) and self::$timeMap['']['']=0;
         }
-        else if(isset(self::$timeMap['']['']) && self::$timeMap[''][''] > 0)
-        {
-            $time_start = self::$timeMap[''][''];
-            self::$timeMap[''][''] = 0;
-        }
-        else
-        {
-            $time_start = microtime(true);
-        }
-         
-        $cost_time = microtime(true) - $time_start;
+
         
         $bin_data = StatisticProtocol::encode($module, $interface, $cost_time, $success, $code, $msg);
         
@@ -200,5 +207,5 @@ if(PHP_SAPI == 'cli' && isset($argv[0]) && $argv[0] == basename(__FILE__))
     $success = rand(0,1);
     $code = rand(300, 400);
     $msg = '这个是测试消息';
-    var_export(StatisticClient::report('TestModule', 'TestInterface', $success, $code, $msg));;
+    var_export(StatisticClient::report('TestModule', 'TestInterface', $success, $code, $msg));
 }

@@ -117,7 +117,7 @@ function main($module, $interface, $date, $start_time, $offset)
             {
                 $html_class = 'class="warning"';
             }
-            $table_data .= "\n<tr $html_class>
+            $table_data = "\n<tr $html_class>
                        <td>{$item['time']}</td>
                        <td>{$item['total_count']}</td>
                         <td> {$item['total_avg_time']}</td>
@@ -127,7 +127,7 @@ function main($module, $interface, $date, $start_time, $offset)
                         <td>{$item['fail_avg_time']}</td>
                         <td>{$item['precent']}%</td>
                     </tr>
-            ";
+            ".$table_data;
         }
     }
     
