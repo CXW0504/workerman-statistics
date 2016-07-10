@@ -13,13 +13,15 @@
  */
 require_once __DIR__ . '/loader.php';
 
+use Bootstrap\StatisticProvider;
+use Bootstrap\StatisticWorkerWeb;
 use \Workerman\Worker;
 use \Workerman\WebServer;
 
-// WebServer
-$web = new WebServer("http://0.0.0.0:55959");
-$web->name = 'StatisticWeb';
-$web->addRoot('www.your_domain.com', __DIR__.'/WorkerWeb');
+// StatisticWorker
+$statistic_worker_web = new StatisticWorkerWeb("http://0.0.0.0:55959");
+$statistic_worker_web->name = 'StatisticWorkerWeb';
+$statistic_worker_web->addRoot('www.your_domain.com', __DIR__.'/WorkerWeb');
 
 // 如果不是在根目录启动，则运行runAll方法
 if(!defined('GLOBAL_START'))
